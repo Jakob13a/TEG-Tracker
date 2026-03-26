@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Aktivitätsmuster</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+    background: #0f172a;
+    font-family: 'Inter', sans-serif;
+    color: white;
+    padding: 40px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: white;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.back {
+    background: #374151;
+    padding: 8px 15px;
+    border-radius: 12px;
+    transition: .3s;
+    text-decoration: none;
+    color: white;
+}
+
+.back:hover {
+    box-shadow: 0 0 20px #22c55e;
+}
+
+.logout-btn {
+    background: #ef4444;
+    padding: 8px 15px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: white;
+    transition: .3s;
+}
+
+.logout-btn:hover {
+    box-shadow: 0 0 20px #ef4444;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 15px;
+    border-left: 4px solid #3b82f6;
+    text-align: center;
+}
+
+.stat-card h4 {
+    margin: 0 0 10px 0;
+    font-size: 12px;
+    color: #94a3b8;
+    text-transform: uppercase;
+}
+
+.stat-card p {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #3b82f6;
+}
+
+.chart-container {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 15px;
+    margin-top: 30px;
+}
+
+.weekday-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.weekday-card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    transform: transition 0.3s;
+    border: 2px solid #334155;
+    cursor: pointer;
+}
+
+.weekday-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    transform: translateY(-2px);
+}
+
+.weekday-name {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #e2e8f0;
+}
+
+.weekday-bar {
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    height: 30px;
+    border-radius: 8px;
+    margin: 15px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.weekday-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    transition: width 0.5s ease;
+}
+
+.weekday-count {
+    font-size: 20px;
+    font-weight: bold;
+    color: #3b82f6;
+    margin-bottom: 5px;
+}
+
+.weekday-percentage {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.insight {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 30px;
+    border-left: 4px solid #fbbf24;
+}
+
+.insight h3 {
+    margin-top: 0;
+    color: #fbbf24;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.insight p {
+    margin: 10px 0;
+    color: #cbd5e1;
+    line-height: 1.6;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>📈 Spieler-Aktivitätsmuster</h1>
+        <div>
+            <a href="/" class="back">← Zurück</a>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h4>Gesamte Aktivitäten</h4>
+            <p>{{ total }}</p>
+        </div>
+        {% set busiestDay = patterns|max(attribute="count") %}
+        <div class="stat-card">
+            <h4>Aktivster Tag</h4>
+            <p>{{ busiestDay.name }}</p>
+        </div>
+    </div>
+
+    <div class="weekday-grid">
+        {% for pattern in patterns %}
+        {% set percentage = (pattern.count / max_count * 100) if max_count > 0 else 0 %}
+        <div class="weekday-card">
+            <div class="weekday-name">{{ pattern.name }}</div>
+            <div class="weekday-count">{{ pattern.count }}</div>
+            <div class="weekday-percentage">
+                {% set total_percentage = (pattern.count / total * 100) if total > 0 else 0 %}
+                {{ "%.1f"|format(total_percentage) }}%
+            </div>
+            <div class="weekday-bar">
+                <div class="weekday-bar-fill" data-width="{{ percentage }}"></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="chart-container">
+        <canvas id="activityChart"></canvas>
+    </div>
+
+    <div class="insight">
+        <h3>💡 Einblicke</h3>
+        <p>📊 Die Aktivitätsdaten zeigen, an welchen Wochentagen Spieler am häufigsten online sind.</p>
+        <p>🎯 Nutze diese Informationen, um: </p>
+        <ul>
+            <li>Wartungsfenster auf weniger aktive Tage zu legen</li>
+            <li>Events auf den aktivsten Tagen zu planen</li>
+            <li>Spieler-Engagement zu optimieren</li>
+            <li>Server-Ressourcen besser zu verteilen</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+// Setze die Widths für die Weekday-Balken
+document.querySelectorAll('.weekday-bar-fill').forEach(el => {
+    const width = el.getAttribute('data-width');
+    el.style.width = width + '%';
+});
+
+const patterns = {{ patterns|tojson }};
+
+// Daten für Chart.js vorbereiten
+const labels = patterns.map(p => p.name);
+const data = patterns.map(p => p.count);
+const backgroundColors = [
+    'rgba(34, 197, 94, 0.7)',    // Montag - Grün
+    'rgba(59, 130, 246, 0.7)',   // Dienstag - Blau
+    'rgba(139, 92, 246, 0.7)',   // Mittwoch - Lila
+    'rgba(249, 115, 22, 0.7)',   // Donnerstag - Orange
+    'rgba(239, 68, 68, 0.7)',    // Freitag - Rot
+    'rgba(236, 72, 153, 0.7)',   // Samstag - Pink
+    'rgba(14, 165, 233, 0.7)'    // Sonntag - Cyan
+];
+const borderColors = [
+    'rgba(22, 163, 74, 1)',      // Montag
+    'rgba(37, 99, 235, 1)',      // Dienstag
+    'rgba(109, 40, 217, 1)',     // Mittwoch
+    'rgba(234, 88, 12, 1)',      // Donnerstag
+    'rgba(220, 38, 38, 1)',      // Freitag
+    'rgba(219, 39, 119, 1)',     // Samstag
+    'rgba(3, 105, 161, 1)'       // Sonntag
+];
+
+const ctx = document.getElementById('activityChart').getContext('2d');
+const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Aktivitäten',
+            data: data,
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
+            borderWidth: 2,
+            borderRadius: 8,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                display: true,
+                labels: {
+                    color: '#cbd5e1',
+                    font: {
+                        size: 14,
+                        weight: '600'
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(148, 163, 184, 0.1)'
+                },
+                ticks: {
+                    color: '#cbd5e1'
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                },
+                ticks: {
+                    color: '#cbd5e1'
+                }
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>

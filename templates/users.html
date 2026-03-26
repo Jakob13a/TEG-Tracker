@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spieler Tracker - Benutzerverwaltung</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body{background:#0f172a;color:white;font-family:'Inter',sans-serif;padding:40px;}
+        table{width:100%;border-collapse:collapse;}
+        th,td{padding:12px 8px;border-bottom:1px solid #334155;text-align:left;}
+        th{background:#1e293b;}
+        tr:hover{background:#1e293b;}
+        .back{display:inline-block;margin-bottom:20px;padding:8px 16px;background:#3b82f6;border-radius:10px;text-decoration:none;color:white;}
+    </style>
+</head>
+<body>
+<a href="/" class="back">← Zurück</a>
+<a href="/login-history" class="back" style="background:#475569;margin-left:10px;">📊 Login-Historie</a>
+<a href="/trash" class="back" style="background:#fbbf24;color:black;margin-left:10px;">🗑️ Papierkorb</a>
+<a href="/dashboard-config" class="back" style="background:#8b5cf6;margin-left:10px;">⚙️ Dashboard</a>
+<h1>Benutzerverwaltung</h1>
+<table>
+    <tr><th>ID</th><th>Benutzername</th><th>Rolle</th><th>Aktionen</th></tr>
+    {% for u in users %}
+    <tr>
+        <td>{{ u[0] }}</td>
+        <td>{{ u[1] }}</td>
+        <td>{{ u[2] }}</td>
+        <td>
+            <form method="POST" style="display:inline;">
+                <input type="hidden" name="user_id" value="{{ u[0] }}">
+                <button name="action" value="toggle_role" style="background:none;border:none;color:#3b82f6;cursor:pointer;">↕ Rolle</button>
+            </form>
+            <form method="POST" style="display:inline;" onsubmit="return confirm('Benutzer löschen?');">
+                <input type="hidden" name="user_id" value="{{ u[0] }}">
+                <button name="action" value="delete" style="background:none;border:none;color:#ef4444;cursor:pointer;">🗑️</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

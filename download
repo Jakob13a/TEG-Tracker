@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+db_lock.log
+backup_log.txt
+discord_log.txt
+backups/

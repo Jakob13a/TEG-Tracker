@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Papierkorb</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+    background: #0f172a;
+    font-family: 'Inter', sans-serif;
+    color: white;
+    padding: 40px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: white;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.back {
+    background: #374151;
+    padding: 8px 15px;
+    border-radius: 12px;
+    transition: .3s;
+    text-decoration: none;
+    color: white;
+}
+
+.back:hover {
+    box-shadow: 0 0 20px #22c55e;
+}
+
+.logout-btn {
+    background: #ef4444;
+    padding: 8px 15px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: white;
+    transition: .3s;
+}
+
+.logout-btn:hover {
+    box-shadow: 0 0 20px #ef4444;
+}
+
+.table-container {
+    background: #1e293b;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #0f172a;
+    border-bottom: 2px solid #334155;
+}
+
+th {
+    padding: 15px;
+    text-align: left;
+    color: #cbd5e1;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #334155;
+    color: #e2e8f0;
+}
+
+tr:hover {
+    background: #334155;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.player-name {
+    font-weight: 600;
+    color: #3b82f6;
+}
+
+.type-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.type-java {
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+}
+
+.type-bedrock {
+    background: rgba(139, 92, 246, 0.2);
+    color: #8b5cf6;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-restore {
+    background: #22c55e;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    transition: 0.3s;
+}
+
+.btn-restore:hover {
+    background: #16a34a;
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+}
+
+.btn-delete {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    transition: 0.3s;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px;
+    color: #64748b;
+}
+
+.info-box {
+    background: rgba(59, 130, 246, 0.2);
+    border-left: 4px solid #3b82f6;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: #cbd5e1;
+}
+
+.info-box strong {
+    color: #3b82f6;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 12px;
+    border-left: 4px solid #ef4444;
+    text-align: center;
+}
+
+.stat-card h4 {
+    margin: 0 0 8px 0;
+    font-size: 11px;
+    color: #94a3b8;
+    text-transform: uppercase;
+}
+
+.stat-card p {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ef4444;
+}
+
+.deleted-info {
+    color: #94a3b8;
+    font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🗑️ Papierkorb</h1>
+        <div>
+            <a href="/users" class="back">← Benutzer</a>
+            <a href="/login-history" class="back" style="margin-left: 10px;">📊 Login</a>
+            <a href="/dashboard-config" class="back" style="margin-left: 10px; background:#8b5cf6;">⚙️ Dashboard</a>
+            <a href="/" class="back" style="margin-left: 10px;">← Hauptseite</a>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="info-box">
+        💡 <strong>Gelöschte Spieler</strong> können hier wiederhergestellt oder endgültig gelöscht werden.
+    </div>
+
+    {% if players %}
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h4>Gelöschte Spieler</h4>
+            <p>{{ players|length }}</p>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Spieler</th>
+                    <th>Version</th>
+                    <th>Gelöscht am</th>
+                    <th>Gelöscht von</th>
+                    <th>Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for player in players %}
+                <tr>
+                    <td class="player-name">{{ player.name }}</td>
+                    <td>
+                        {% if player.type == "java" %}
+                            <span class="type-badge type-java">☕ Java</span>
+                        {% else %}
+                            <span class="type-badge type-bedrock">📦 Bedrock</span>
+                        {% endif %}
+                    </td>
+                    <td class="deleted-info">{{ player.deleted_at }}</td>
+                    <td class="deleted-info">{{ player.deleted_by }}</td>
+                    <td class="actions">
+                        <form method="POST" action="/restore/{{ player.uuid }}" style="display: inline;">
+                            <button type="submit" class="btn-restore" onclick="return confirm('Spieler wirklich wiederherstellen?');">
+                                ↩️ Wiederherstellen
+                            </button>
+                        </form>
+                        <form method="POST" action="/permanent-delete/{{ player.uuid }}" style="display: inline;">
+                            <button type="submit" class="btn-delete" onclick="return confirm('Spieler endgültig löschen? Dies kann nicht rückgängig gemacht werden!');">
+                                🗑️ Löschen
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-data">
+        <p>✨ Der Papierkorb ist leer!</p>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

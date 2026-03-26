@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Einstellungen</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+
+body {
+    background: #0f172a;
+    font-family: 'Inter', sans-serif;
+    color: white;
+    padding: 40px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: white;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #cbd5e1;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 2px solid #1e293b;
+    background: #1e293b;
+    color: white;
+    font-size: 15px;
+    box-sizing: border-box;
+    transition: 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    outline: none;
+}
+
+.info-box {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid #3b82f6;
+    margin-bottom: 20px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.info-box code {
+    background: #0f172a;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: #60a5fa;
+}
+
+button {
+    background: #22c55e;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+    font-size: 15px;
+}
+
+button:hover {
+    box-shadow: 0 0 20px #22c55e;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #64748b;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.back-link:hover {
+    color: #3b82f6;
+}
+
+.success-box {
+    background: #22c55e;
+    color: white;
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    display: none;
+}
+
+.test-btn {
+    background: #3b82f6;
+    margin-top: 10px;
+}
+
+.test-btn:hover {
+    box-shadow: 0 0 20px #3b82f6;
+}
+
+</style>
+</head>
+<body>
+
+<a href="/" class="back-link">← Zurück zur Übersicht</a>
+
+<div class="container">
+    <h1>⚙️ Einstellungen</h1>
+    
+    <div class="success-box" id="successBox">
+        ✅ Einstellungen gespeichert!
+    </div>
+    
+    <form method="POST" onsubmit="handleSubmit(event)">
+        
+        <div class="form-group">
+            <label>Discord Webhook URL</label>
+            <div class="info-box">
+                📌 <strong>Wie aktiviere ich Webhooks?</strong><br>
+                1. Gehe zu deinem Discord Server<br>
+                2. Kanäle → Bearbeiten → Webhooks → Neuer Webhook<br>
+                3. Kopiere die Webhook-URL und füge sie hier ein<br><br>
+                💡 Mit dieser URL können Spielerlisten direkt zu Discord gesendet werden.
+            </div>
+            <input type="text" name="webhook_url" placeholder="https://discord.com/api/webhooks/..." 
+                   value="{{ webhook_url or '' }}">
+        </div>
+        
+        <button type="submit">💾 Speichern</button>
+        
+        {% if webhook_url %}
+        <button type="button" class="test-btn" onclick="testWebhook()">🧪 Webhook testen</button>
+        {% endif %}
+    </form>
+    <div style="margin-top:20px;text-align:center;">
+        <a href="/change_password">Passwort ändern</a>
+    </div>
+    </form>
+</div>
+
+<script>
+function handleSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    
+    fetch('/settings', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.text())
+    .then(() => {
+        document.getElementById('successBox').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('successBox').style.display = 'none';
+        }, 3000);
+    })
+    .catch(e => {
+        alert('Fehler beim Speichern: ' + e);
+    });
+}
+
+function testWebhook() {
+    const testPayload = {
+        "embeds": [{
+            "title": "🧪 Webhook Test",
+            "description": "Dieser Webhook funktioniert! ✅",
+            "color": 3394560,
+            "timestamp": new Date().toISOString()
+        }],
+        "username": "Spieler Tracker Bot"
+    };
+    
+    const webhookUrl = document.querySelector('input[name="webhook_url"]').value;
+    if (!webhookUrl) {
+        alert('Bitte gib eine Webhook-URL ein!');
+        return;
+    }
+    
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(testPayload)
+    })
+    .then(r => {
+        if (r.ok) {
+            alert('✅ Webhook funktioniert! Überprüfe deinen Discord-Kanal.');
+        } else {
+            alert('❌ Webhook-Fehler: ' + r.statusText);
+        }
+    })
+    .catch(e => {
+        alert('❌ Fehler beim Testen: ' + e);
+    });
+}
+</script>
+
+</body>
+</html>

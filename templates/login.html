@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spieler Tracker - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .login-container {
+            background: #1e293b;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 380px;
+        }
+        
+        .login-container h1 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+        
+        .login-container .subtitle {
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            background: #0f172a;
+            color: white;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+            outline: none;
+        }
+        
+        .form-group input::placeholder {
+            color: #64748b;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #2563eb;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+        
+        .info-box {
+            background: #0f172a;
+            border-left: 4px solid #3b82f6;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h1>🎮 Spieler Tracker</h1>
+    <p class="subtitle">Minecraft Spieler Management</p>
+    
+    <form method="POST">
+        {% if error %}<div class="error" style="color:#ef4444;margin-bottom:10px;text-align:center;">{{ error }}</div>{% endif %}
+        <div class="form-group">
+            <label>Benutzername</label>
+            <input type="text" name="username" placeholder="Gib deinen Benutzernamen ein" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Passwort</label>
+            <input type="password" name="password" placeholder="Gib dein Passwort ein" required>
+        </div>
+        
+        <button type="submit">🔐 Anmelden</button>
+    </form>
+    
+    <div class="info-box">
+        💡 <strong>Demo Login:</strong><br>
+        Diese Webseite nutzt Authentifizierung. Kontaktiere deinen Admin für Zugangsdaten.
+    </div>
+</div>
+
+</body>
+</html>

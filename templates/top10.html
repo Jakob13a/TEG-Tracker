@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Top 10 - Aktivste Spieler</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+
+body {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    font-family: 'Inter', sans-serif;
+    color: white;
+    padding: 40px;
+    margin: 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 32px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.back-link {
+    background: #374151;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-weight: 600;
+}
+
+.back-link:hover {
+    box-shadow: 0 0 20px rgba(55, 65, 81, 0.8);
+}
+
+.ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1e293b;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.ranking-table thead {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    border-bottom: 2px solid #22c55e;
+}
+
+.ranking-table th {
+    padding: 20px;
+    text-align: left;
+    font-weight: 600;
+    color: #cbd5e1;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.ranking-table tbody tr {
+    border-bottom: 1px solid #334155;
+    transition: 0.3s;
+}
+
+.ranking-table tbody tr:hover {
+    background: #0f172a;
+    box-shadow: inset 0 0 15px rgba(34, 197, 94, 0.1);
+}
+
+.ranking-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.ranking-table td {
+    padding: 20px;
+    color: #e2e8f0;
+}
+
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 16px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+}
+
+.rank-badge.rank-1 {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+    font-size: 18px;
+}
+
+.rank-badge.rank-2 {
+    background: linear-gradient(135deg, #c0c0c0, #a8a9ad);
+}
+
+.rank-badge.rank-3 {
+    background: linear-gradient(135deg, #cd7f32, #b57a3a);
+}
+
+.player-name {
+    font-weight: 600;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.player-name img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.type-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.type-badge.java {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    border: 1px solid #3b82f6;
+}
+
+.type-badge.bedrock {
+    background: rgba(139, 92, 246, 0.2);
+    color: #a78bfa;
+    border: 1px solid #8b5cf6;
+}
+
+.days-offline {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.days-offline.active {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.date-text {
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.view-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.3s;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.view-btn:hover {
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #94a3b8;
+}
+
+.empty-state-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>✅ Top 10 Aktivste Spieler</h1>
+        <a href="/" class="back-link">← Zurück</a>
+    </div>
+    
+    {% if players %}
+    <table class="ranking-table">
+        <thead>
+            <tr>
+                <th>Platz</th>
+                <th>Spieler</th>
+                <th>Version</th>
+                <th>Offline seit</th>
+                <th>Letztes Online</th>
+                <th>Erstes Mal</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in players %}
+            <tr>
+                <td>
+                    <div class="rank-badge {% if loop.index == 1 %}rank-1{% elif loop.index == 2 %}rank-2{% elif loop.index == 3 %}rank-3{% endif %}">
+                        {{ loop.index }}
+                    </div>
+                </td>
+                <td>
+                    <div class="player-name">
+                        {% if player.type == "java" %}
+                            <img src="https://mc-heads.net/avatar/{{ player.uuid }}/40"
+                                 onerror="this.onerror=null;this.src='https://mc-heads.net/avatar/{{ player.name }}/40';">
+                        {% else %}
+                            <img src="https://mc-heads.net/avatar/{{ player.name }}/40">
+                        {% endif %}
+                        {{ player.name }}
+                    </div>
+                </td>
+                <td>
+                    <span class="type-badge {{ player.type }}">
+                        {% if player.type == "java" %}☕ Java{% else %}📦 Bedrock{% endif %}
+                    </span>
+                </td>
+                <td>
+                    <div class="days-offline active">{{ player.days_offline }} Tage</div>
+                </td>
+                <td>
+                    <div class="date-text">{{ player.last_seen }}</div>
+                </td>
+                <td>
+                    <div class="date-text">{{ player.first_seen }}</div>
+                </td>
+                <td>
+                    <a href="/player/{{ player.uuid }}" class="view-btn">👁️ Anschauen</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">😴</div>
+        <p>Keine Spieler gefunden. Füge welche hinzu um diese Liste zu sehen!</p>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

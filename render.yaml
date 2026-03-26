@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: teg-tracker
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 2
+    envVars:
+      - key: TEGTRACKER_SECRET_KEY
+        generateValue: true
+      - key: TEGTRACKER_ADMIN_PASSWORD
+        value: Jack9177?

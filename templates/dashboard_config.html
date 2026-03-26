@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard-Konfiguration</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+    background: #0f172a;
+    font-family: 'Inter', sans-serif;
+    color: white;
+    padding: 40px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.back {
+    background: #374151;
+    padding: 8px 15px;
+    border-radius: 12px;
+    transition: .3s;
+    text-decoration: none;
+    color: white;
+}
+
+.back:hover {
+    box-shadow: 0 0 20px #22c55e;
+}
+
+.logout-btn {
+    background: #ef4444;
+    padding: 8px 15px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: white;
+    transition: .3s;
+}
+
+.logout-btn:hover {
+    box-shadow: 0 0 20px #ef4444;
+}
+
+.info-box {
+    background: rgba(59, 130, 246, 0.2);
+    border-left: 4px solid #3b82f6;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    color: #cbd5e1;
+}
+
+.widgets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.widget-card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid #334155;
+    transition: all 0.3s ease;
+}
+
+.widget-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+}
+
+.widget-card.enabled {
+    border-color: #22c55e;
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+    background: #1e293b;
+}
+
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.widget-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.widget-icon {
+    font-size: 24px;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #475569;
+    transition: 0.3s;
+    border-radius: 26px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: #22c55e;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+}
+
+.widget-description {
+    color: #cbd5e1;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.widget-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-enabled {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+}
+
+.status-disabled {
+    background: rgba(107, 114, 128, 0.2);
+    color: #9ca3af;
+}
+
+form {
+    margin: 30px 0;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.submit-btn:hover {
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+    transform: translateY(-2px);
+}
+
+.preview-section {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 30px;
+    border: 2px solid #334155;
+}
+
+.preview-section h3 {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.preview-widgets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.preview-badge {
+    background: #3b82f6;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.preview-badge.disabled {
+    background: #6b7280;
+    opacity: 0.5;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>⚙️ Dashboard-Konfiguration</h1>
+        <div>
+            <a href="/" class="back">← Hauptseite</a>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="info-box">
+        📌 <strong>Konfiguriere dein Dashboard!</strong> Wähle welche Widgets angezeigt werden sollen.
+    </div>
+
+    <form method="POST">
+        <div class="widgets-grid">
+            {% for widget_key, widget_config in widgets.items() %}
+            <div class="widget-card {% if widget_config.enabled %}enabled{% endif %}">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <span class="widget-icon">{{ widget_config.icon }}</span>
+                        {{ widget_config.name }}
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" name="widget_{{ widget_key }}" {% if widget_config.enabled %}checked{% endif %} onchange="updatePreview()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <p class="widget-description">{{ widget_config.description }}</p>
+                <span class="widget-status {% if widget_config.enabled %}status-enabled{% else %}status-disabled{% endif %}">
+                    {% if widget_config.enabled %}✓ Aktiviert{% else %}✗ Deaktiviert{% endif %}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="submit-btn">✓ Änderungen speichern</button>
+    </form>
+
+    <div class="preview-section">
+        <h3>👁️ Vorschau der aktivierten Widgets</h3>
+        <div class="preview-widgets" id="previewWidgets"></div>
+    </div>
+</div>
+
+<script>
+const widgetLabels = {
+    'stats': '📊 Statistiken',
+    'list': '👥 Spielerliste',
+    'trends': '📈 Trends',
+    'top10': '🏆 Top 10',
+    'patterns': '📊 Muster',
+    'discord': '💬 Discord'
+};
+
+function updatePreview() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const preview = document.getElementById('previewWidgets');
+    preview.innerHTML = '';
+    
+    checkboxes.forEach(checkbox => {
+        const widgetKey = checkbox.name.replace('widget_', '');
+        const label = widgetLabels[widgetKey] || widgetKey;
+        
+        const badge = document.createElement('span');
+        badge.className = 'preview-badge' + (checkbox.checked ? '' : ' disabled');
+        badge.textContent = label;
+        
+        preview.appendChild(badge);
+    });
+}
+
+// Initialisiere Vorschau beim Laden
+updatePreview();
+</script>
+
+</body>
+</html>

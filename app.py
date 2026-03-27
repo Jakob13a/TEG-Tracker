@@ -21,7 +21,7 @@ app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
-DATABASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'spieler.db')
+DATABASE = os.environ.get('DATABASE_PATH', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'spieler.db'))
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -51,7 +51,15 @@ def retry_db_operation(func, max_retries=5):
             raise
 
 def init_db():
-    os.makedirs(os.path.dirname(DATABASE), exist_ok=True)
+    db_dir = os.path.dirname(DATABASE)
+    if db_dir:
+        os.makedirs(db_dir, exist_ok=True)
+    # On Railway: seed from bundled DB if volume is empty
+    seed = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'spieler.db')
+    if not os.path.exists(DATABASE) and os.path.exists(seed) and DATABASE != seed:
+        import shutil as _shutil
+        _shutil.copy(seed, DATABASE)
+        print(f"Seeded database from {seed} to {DATABASE}")
     conn = get_db_connection()
     c = conn.cursor()
 
